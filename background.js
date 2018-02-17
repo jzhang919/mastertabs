@@ -1,3 +1,8 @@
+/*USAGE: Activates when clicking extension icon.
+* AUTHORS: James Zhang, Jonathan Lee
+* Date: 02/17/18
+* */
+
 chrome.browserAction.onClicked.addListener(function() {
     /* Store all tab URLs in current window */
     var urlList = new Array();
@@ -33,6 +38,7 @@ chrome.browserAction.onClicked.addListener(function() {
                 for (var j = 0; j < urls.length; j++) {
                     chrome.tabs.remove(+find_key(tab_dict, urls[j]));
                 }
+                chrome.tabs.create({url:"master_tab.html"});
             }
         }
 
