@@ -40,16 +40,19 @@ chrome.browserAction.onClicked.addListener(function() {
             var urls = map[keys[i]];
             if (urls.length > 1){
                 for (var j = 0; j < urls.length; j++) {
-                    remove_tab(tab_dict, urls[j], current_tab);
+                    master_ls.push(remove_tab(tab_dict, urls[j], current_tab));
                 }
                 /* Need to dynamically add flavicon, title, and list. */
                 master_title = keys[i];
-                master_ls = urls;
                 window.alert(master_title);
                 chrome.tabs.create({url:"master_tab.html"});
             }
         }
 
+        window.console.log("URLs to be printed in the HTML: ");
+        for (var i=0; i < master_ls.length; i++){
+            window.console.log(master_ls[i]);
+        }
 
     });
 });
@@ -60,7 +63,9 @@ function remove_tab(obj, value, current_tab) {
     if (key != current_tab.id) {
         delete obj[key];
         chrome.tabs.remove(+key);
+        return value;
     }
+
 }
 
 /* Debugging Tools
