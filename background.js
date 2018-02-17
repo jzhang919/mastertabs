@@ -8,6 +8,7 @@ chrome.browserAction.onClicked.addListener(function() {
     var urlList = new Array();
     var tab_dict = {};
     var map = {};
+    var current_tab = -100;
 
     chrome.tabs.query({currentWindow: true}, function(tabs) {
 
@@ -15,6 +16,8 @@ chrome.browserAction.onClicked.addListener(function() {
             if (tabs[i] != null){
                 urlList.push(new URL(tabs[i].url));
                 tab_dict[tabs[i].id] = new URL(tabs[i].url).href;
+                if(tabs[i].highlighted == 1)
+                    current_tab = tabs[i].id;
             }
         }
 
@@ -36,7 +39,7 @@ chrome.browserAction.onClicked.addListener(function() {
             var urls = map[keys[i]];
             if (urls.length > 1){
                 for (var j = 0; j < urls.length; j++) {
-                    chrome.tabs.remove(+find_key(tab_dict, urls[j]));
+                    remove_tab(tab_dict, urls[j], current_tab);
                 }
                 chrome.tabs.create({url:"master_tab.html"});
             }
@@ -46,10 +49,12 @@ chrome.browserAction.onClicked.addListener(function() {
     });
 });
 
-function find_key(obj, value) {
+function remove_tab(obj, value, current_tab) {
     var key = Object.keys(obj)[Object.values(obj).indexOf(value)];
-    delete obj[key];
-    return key;
+    if (key != current_tab.id) {
+        delete obj[key];
+        chrome.tabs.remove(+key);
+    }
 }
 
 /* Debugging Tools
