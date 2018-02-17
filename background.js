@@ -38,13 +38,14 @@ chrome.browserAction.onClicked.addListener(function() {
         for (var i = 0; i < keys.length; i++){
             window.console.log("Top-level domain: ", keys[i]);
             var urls = map[keys[i]];
-            if (urls.length > 2){
+            if (urls.length > 1){
                 for (var j = 0; j < urls.length; j++) {
                     remove_tab(tab_dict, urls[j], current_tab);
                 }
                 /* Need to dynamically add flavicon, title, and list. */
                 master_title = keys[i];
                 master_ls = urls;
+                window.alert(master_title);
                 chrome.tabs.create({url:"master_tab.html"});
             }
         }
@@ -61,8 +62,6 @@ function remove_tab(obj, value, current_tab) {
         chrome.tabs.remove(+key);
     }
 }
-
-function retrieve_tabs();
 
 /* Debugging Tools
 * DEBUG: Print all URL values stored in tab dictionary.
