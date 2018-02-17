@@ -6,8 +6,8 @@ var url_ls = new Array();
 var tab_dict = {}; // {key: unique tab id, val: complete tab href}
 var map = {}; // {key: hostname, val: array of associated tab hrefs}
 var current_tab = -100;
-var master_title = "";
-var master_ls = new Array();
+var domain_name = "";
+var tabs_removed = new Array();
 
 chrome.browserAction.onClicked.addListener(function() {
     /* Store all tab URLs in current window */
@@ -42,22 +42,12 @@ chrome.browserAction.onClicked.addListener(function() {
                 for (var j = 0; j < urls.length; j++) {
                     url = remove_tab(tab_dict, urls[j], current_tab);
                     if (url != -1000)
-                        master_ls.push(url);
+                        tabs_removed.push(url);
                 }
                 /* Need to dynamically add flavicon, title, and list. */
-                master_title = keys[i];
+                domain_name = keys[i];
                 chrome.tabs.create({url:"master_tab.html"});
-                var viewTabUrl = chrome.extension.getURL('master_tab.html');
-                var views = chrome.extension.getViews();
-                for (var i = 0; i < views.length; i++) {
-                    var view = views[i];
-                    // If this view has the right URL and hasn't been used yet...
-                    if (view.location.href == viewTabUrl) {
-                        // ...call one of its functions and set a property.
-                        view.set_master(master_title, master_ls);
-                        break; // we're done
-                    }
-                }
+
             }
         }
 
