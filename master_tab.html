@@ -10,15 +10,25 @@
     vertical-align:middle;
     background-color: #3E4A7E;
   }
-</style >
+</style>
+
+<script>
+function set_master(master_title, master_ls) {
+  document.title = master_title;
+  var tab_ls = document.createElement('ol');
+  for (var i = 0; i < master_ls.length; i++) {
+    var item = document.createElement('li');
+    item.appendChild(document.createTextNode(master_ls[i]));
+    tab_ls.appendChild(item);
+  }
+  document.getElementById('tabs').appendChild(tab_ls);
+}
+</script>
 
 <body>
 
 <h2>master tab</h2>
 <div id="tabs"></div>
-<script src="background.js"></script>
-<script src="master_tab.js" ></script>
 </body>
 </html>
-
 

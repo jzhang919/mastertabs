@@ -1,7 +1,7 @@
 /* USAGE: Injects collapsed tabs into HTML list in master tab
  * AUTHORS: Jonathan Lee, James Zhang
  * Date: 02/17/18 */
-console.log(master_title);
+
 document.title = master_title;
 var tab_ls = document.createElement('ol');
 for (var i = 0; i < master_ls.length; i++) {

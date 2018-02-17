@@ -40,18 +40,25 @@ chrome.browserAction.onClicked.addListener(function() {
             var urls = map[keys[i]];
             if (urls.length > 1){
                 for (var j = 0; j < urls.length; j++) {
-                    master_ls.push(remove_tab(tab_dict, urls[j], current_tab));
+                    url = remove_tab(tab_dict, urls[j], current_tab);
+                    if (url != -1000)
+                        master_ls.push(url);
                 }
                 /* Need to dynamically add flavicon, title, and list. */
                 master_title = keys[i];
-                window.alert(master_title);
                 chrome.tabs.create({url:"master_tab.html"});
+                var viewTabUrl = chrome.extension.getURL('master_tab.html');
+                var views = chrome.extension.getViews();
+                for (var i = 0; i < views.length; i++) {
+                    var view = views[i];
+                    // If this view has the right URL and hasn't been used yet...
+                    if (view.location.href == viewTabUrl) {
+                        // ...call one of its functions and set a property.
+                        view.set_master(master_title, master_ls);
+                        break; // we're done
+                    }
+                }
             }
-        }
-
-        window.console.log("URLs to be printed in the HTML: ");
-        for (var i=0; i < master_ls.length; i++){
-            window.console.log(master_ls[i]);
         }
 
     });
@@ -60,12 +67,13 @@ chrome.browserAction.onClicked.addListener(function() {
 /* Note: + is equivalent to parseInt. */
 function remove_tab(obj, value, current_tab) {
     var key = Object.keys(obj)[Object.values(obj).indexOf(value)];
-    if (key != current_tab.id) {
+    var k = parseInt(key, 10);
+    if (k != current_tab) {
         delete obj[key];
         chrome.tabs.remove(+key);
         return value;
     }
-
+    return -1000;
 }
 
 /* Debugging Tools
